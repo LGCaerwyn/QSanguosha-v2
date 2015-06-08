@@ -6,7 +6,9 @@
 #include "structs.h"
 #include "lua-wrapper.h"
 #include "standard.h"
-#include <QFile>
+#include "clientplayer.h"
+#include "util.h"
+#include "roomthread.h"
 
 const int Card::S_UNKNOWN_CARD_ID = -1;
 
@@ -583,6 +585,10 @@ Card *Card::Clone(const Card *card)
         card_obj = lcard->clone();
     } else if (card->isKindOf("LuaArmor")) {
         const LuaArmor *lcard = qobject_cast<const LuaArmor *>(card);
+        Q_ASSERT(lcard != NULL);
+        card_obj = lcard->clone();
+    } else if (card->isKindOf("LuaTreasure")) {
+        const LuaTreasure *lcard = qobject_cast<const LuaTreasure *>(card);
         Q_ASSERT(lcard != NULL);
         card_obj = lcard->clone();
     } else {

@@ -9,6 +9,11 @@ CONFIG += audio
 
 CONFIG += lua
 
+CONFIG -= flat
+
+CONFIG += precompile_header
+PRECOMPILED_HEADER = src/pch.h
+DEFINES += USING_PCH
 
 SOURCES += \
     src/main.cpp \
@@ -37,7 +42,6 @@ SOURCES += \
     src/dialog/distanceviewdialog.cpp \
     src/dialog/generaloverview.cpp \
     src/dialog/mainwindow.cpp \
-    src/dialog/packagingeditor.cpp \
     src/dialog/playercarddialog.cpp \
     src/dialog/roleassigndialog.cpp \
     src/dialog/scenario-overview.cpp \
@@ -119,8 +123,15 @@ SOURCES += \
     src/package/yjcm2012.cpp \
     src/package/yjcm2013.cpp \
     src/package/yjcm2014.cpp \
+    src/package/yjcm2015.cpp \
     swig/sanguosha_wrap.cxx \
-    src/dialog/banipdialog.cpp
+    src/dialog/banipdialog.cpp \
+    src/package/tw.cpp \
+    src/package/ol.cpp \
+    src/package/jsp.cpp \
+    src/dialog/mainwindowserverlist.cpp \
+    src/dialog/dialogslsettings.cpp \
+    src/server/qtupnpportmapping.cpp
 
 HEADERS += \
     src/client/aux-skills.h \
@@ -150,7 +161,6 @@ HEADERS += \
     src/dialog/distanceviewdialog.h \
     src/dialog/generaloverview.h \
     src/dialog/mainwindow.h \
-    src/dialog/packagingeditor.h \
     src/dialog/playercarddialog.h \
     src/dialog/roleassigndialog.h \
     src/dialog/scenario-overview.h \
@@ -221,6 +231,7 @@ HEADERS += \
     src/package/yjcm2012.h \
     src/package/yjcm2013.h \
     src/package/yjcm2014.h \
+    src/package/yjcm2015.h \
     src/core/room-state.h \
     src/core/wrapped-card.h \
     src/ui/bubblechatbox.h \
@@ -232,14 +243,24 @@ HEADERS += \
     src/ui/ui-utils.h \
     src/package/thicket.h \
     src/package/wind.h \
-    src/dialog/banipdialog.h
+    src/dialog/banipdialog.h \
+    src/package/tw.h \
+    src/package/ol.h \
+    src/package/jsp.h \
+    src/pch.h \
+    src/dialog/mainwindowserverlist.h \
+    src/dialog/dialogslsettings.h \
+    src/core/defines.h \
+    src/server/qtupnpportmapping.h
 
 FORMS += \
     src/dialog/cardoverview.ui \
     src/dialog/configdialog.ui \
     src/dialog/connectiondialog.ui \
     src/dialog/generaloverview.ui \
-    src/dialog/mainwindow.ui
+    src/dialog/mainwindow.ui \
+    src/dialog/mainwindowserverlist.ui \
+    src/dialog/dialogslsettings.ui
 
 
 CONFIG(buildbot) {
