@@ -15,7 +15,8 @@
 
 FurongCard::FurongCard()
 {
-
+    will_throw = false;
+    handling_method = Card::MethodNone;
 }
 
 bool FurongCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const
@@ -37,9 +38,6 @@ void FurongCard::onEffect(const CardEffectStruct &effect) const
     const Card *card1 = Sanguosha->getCard(subcards.first());
     const Card *card2 = Sanguosha->getCard(c->getSubcards().first());
 
-    if (card1 == NULL || card2 == NULL)
-        return;
-
     if (card1->isKindOf("Slash") && !card2->isKindOf("Jink")) {
         room->throwCard(this, effect.from);
         room->damage(DamageStruct(objectName(), effect.from, effect.to));
@@ -50,6 +48,8 @@ void FurongCard::onEffect(const CardEffectStruct &effect) const
             room->obtainCard(effect.from, id, false);
         }
     }
+
+    delete c;
 }
 
 class Furong : public OneCardViewAsSkill
@@ -270,6 +270,7 @@ public:
     }
 };
 
+/*
 JigongCard::JigongCard()
 {
     target_fixed = true;
@@ -299,6 +300,31 @@ public:
     const Card *viewAs() const
     {
         return new JigongCard();
+    }
+};
+*/
+
+class Jigong : public PhaseChangeSkill
+{
+public:
+    Jigong() : PhaseChangeSkill("jigong")
+    {
+
+    }
+
+    bool triggerable(const ServerPlayer *target) const
+    {
+        return PhaseChangeSkill::triggerable(target) && target->getPhase() == Player::Play;
+    }
+
+    bool onPhaseChange(ServerPlayer *target) const
+    {
+        if (target->askForSkillInvoke(this)) {
+            target->drawCards(2, "jigong");
+            target->getRoom()->setPlayerFlag(target, "jigong");
+        }
+
+        return false;
     }
 };
 
@@ -1070,7 +1096,7 @@ public:
 
     bool isEnabledAtPlay(const Player *player) const
     {
-        return player->getMark("zhanjuedraw") >= 2;
+        return player->getMark("zhanjuedraw") < 2;
     }
 };
 
@@ -1083,7 +1109,7 @@ public:
         events << CardFinished << PreDamageDone << EventPhaseChanging;
     }
 
-    bool triggerable(const ServerPlayer *target)
+    bool triggerable(const ServerPlayer *target) const
     {
         return target != NULL;
     }
@@ -1093,16 +1119,16 @@ public:
         if (triggerEvent == PreDamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card != NULL && damage.card->isKindOf("Duel") && damage.card->getSkillName() == "zhanjue" && damage.from != NULL) {
-                QVariantMap m = damage.from->tag.value("zhanjue", QVariantMap()).toMap();
+                QVariantMap m = room->getTag("zhanjue").toMap();
                 QVariantList l = m.value(damage.card->toString(), QVariantList()).toList();
                 l << QVariant::fromValue(damage.to);
                 m[damage.card->toString()] = l;
-                damage.from->tag["zhanjue"] = m;
+                room->setTag("zhanjue", m);
             }
         } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card != NULL && use.card->isKindOf("Duel") && use.card->getSkillName() == "zhanjue") {
-                QVariantMap m = use.from->tag.value("zhanjue", QVariantMap()).toMap();
+                QVariantMap m = room->getTag("zhanjue").toMap();
                 QVariantList l = m.value(use.card->toString(), QVariantList()).toList();
                 if (!l.isEmpty()) {
                     QList<ServerPlayer *> l_copy;
@@ -1115,7 +1141,7 @@ public:
                     room->drawCards(l_copy, 1, objectName());
                 }
                 m.remove(use.card->toString());
-                use.from->tag["zhanjue"] = m;
+                room->setTag("zhanjue", m);
             }
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
@@ -1218,6 +1244,9 @@ public:
         if (lieges.isEmpty())
             return false;
 
+        if (!room->askForCard(player, "..", "@qinwang-discard", data, "qinwang"))
+            return false;
+
         player->setFlags("qinwangjijiang");
         try {
             bool t = jj->trigger(triggerEvent, room, player, data);
@@ -1314,7 +1343,7 @@ YJCM2015Package::YJCM2015Package()
     gongsun->addSkill(new Huaiyi);
 
     addMetaObject<FurongCard>();
-    addMetaObject<JigongCard>();
+    //addMetaObject<JigongCard>();
     addMetaObject<YjYanyuCard>();
     addMetaObject<HuomoCard>();
     addMetaObject<AnguoCard>();
