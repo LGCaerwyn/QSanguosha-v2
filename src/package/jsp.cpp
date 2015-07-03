@@ -335,7 +335,7 @@ public:
     Fengliang() : TriggerSkill("fengliang")
     {
         frequency = Wake;
-        events << EnterDying;
+        events << Dying;
     }
 
     bool triggerable(const ServerPlayer *target) const
@@ -343,8 +343,12 @@ public:
         return TriggerSkill::triggerable(target) && target->getMark(objectName()) == 0;
     }
 
-    bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const
+    bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
     {
+        DyingStruct dying = data.value<DyingStruct>();
+        if (dying.who != player)
+            return false;
+
         room->broadcastSkillInvoke(objectName());
         room->doSuperLightbox("jsp_jiangwei", objectName());
 
