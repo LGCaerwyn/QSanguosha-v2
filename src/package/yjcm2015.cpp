@@ -81,6 +81,9 @@ public:
         if (change.to != Player::Play)
             return false;
 
+        if (player->isSkipped(Player::Play))
+            return false;
+
         ServerPlayer *target = room->askForPlayerChosen(player, room->getOtherPlayers(player), objectName(), "@mingjian-give", true, true);
         if (target == NULL)
             return false;
@@ -153,7 +156,7 @@ public:
             return false;
 
 
-        if (player->askForSkillInvoke(this)) {
+        if (player->askForSkillInvoke(this, data)) {
             if (!player->isLord() && player->hasSkill("weidi")) {
                 room->broadcastSkillInvoke("weidi");
                 QString generalName = "yuanshu";
@@ -1756,7 +1759,7 @@ void AnguoCard::onEffect(const CardEffectStruct &effect) const
 {
     Room *room = effect.to->getRoom();
     int beforen = 0;
-    foreach (ServerPlayer *p, room->getOtherPlayers(effect.to)) {
+    foreach (ServerPlayer *p, room->getAlivePlayers()) {
         if (effect.to->inMyAttackRange(p))
             beforen++;
     }
@@ -1765,7 +1768,7 @@ void AnguoCard::onEffect(const CardEffectStruct &effect) const
     effect.to->obtainCard(Sanguosha->getCard(id));
 
     int aftern = 0;
-    foreach (ServerPlayer *p, room->getOtherPlayers(effect.to)) {
+    foreach (ServerPlayer *p, room->getAlivePlayers()) {
         if (effect.to->inMyAttackRange(p))
             aftern++;
     }
