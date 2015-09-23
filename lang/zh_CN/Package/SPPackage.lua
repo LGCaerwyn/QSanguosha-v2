@@ -436,6 +436,7 @@ return {
 	["~jiqiao"] = "选择任意张装备牌→点击确定",
 	["linglong"] = "玲珑",
 	[":linglong"] = "锁定技。若你的装备区没有防具牌，视为你装备【八卦阵】；若你的装备区没有坐骑牌，你的手牌上限+1；你的装备区没有宝物牌，视为你拥有技能“奇才”。",
+	["#linglong-treasure"] = "玲珑",
 
 	--TWSP
 	["TaiwanYJCM"] = "台湾一将成名",
@@ -583,4 +584,22 @@ return {
 	["olleiji"] = "雷击",
 	[":olleiji"] = "当你使用或打出【闪】时，你可以令一名其他角色进行判定，若结果为：黑桃，你对该角色造成2点雷电伤害；梅花，你回复1点体力，然后对该角色造成1点雷电伤害。",
 	["@olleiji"] = "您可以发动“雷击”选择一名其他角色，令其进行判定",
+
+	["ol_caozhi"] = "OL曹植",
+	["&ol_caozhi"] = "曹植",
+	["designer:caozhi"] = "Foxear",
+	["illustrator:caozhi"] = "木美人",
+	["olluoying"] = "落英",
+	[":olluoying"] = "其他角色的牌因判定或弃置而置入弃牌堆时，你可以获得其中所有梅花牌。",
+
+	["zhugeguo"] = "诸葛果",
+	["&zhugeguo"] = "诸葛果",
+	["#zhugeguo"] = "凤阁乘烟",
+	["illustrator:zhugeguo"] = "手机三国杀",
+	["olyuhua"] = "羽化",
+	[":olyuhua"] = "锁定技。弃牌阶段内，你的非基本牌不计入手牌数，且你不能弃置你的非基本牌。",
+	["#olyuhua-effect"] = "受技能“<font color=\"yellow\"><b>羽化</b></font>”的影响，%from 的手牌数视为 %arg",
+	["olqirang"] = "祈禳",
+	[":olqirang"] = "当有装备牌进入你的装备区时，你可以获得牌堆中的一张锦囊牌。",
+	["#olqirang-failed"] = "牌堆中没有锦囊牌，取消“<font color=\"yellow\"><b>祈禳</b></font>”的后续效果",
 }
